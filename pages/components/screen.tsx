@@ -12,7 +12,6 @@ const Screen: NextPage = () => {
       </Head>
 
       <main className="w-full h-full">
-        <p>Test</p>
         <ThreeDWorld />
       </main>
     </div>
