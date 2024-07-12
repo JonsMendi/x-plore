@@ -1,5 +1,6 @@
 import { Box } from '@react-three/drei';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Vector3 } from 'three';
 
 const initialLayout = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -20,8 +21,22 @@ const initialLayout = [
 
 const endPosition = { x: -2, y: 0.5, z: 0 };
 
+export const wallPositions: Vector3[] = [];
+
 const Labyrinth = () => {
   const [layout] = useState(initialLayout);
+
+  // Clear wall positions before populating
+  useEffect(() => {
+    wallPositions.length = 0; // Clear existing positions
+    layout.forEach((row, rowIndex) =>
+      row.forEach((cell, colIndex) => {
+        if (cell === 1) {
+          wallPositions.push(new Vector3(colIndex - 6, 2, rowIndex - 7));
+        }
+      })
+    );
+  }, [layout]);
 
   return (
     <>
