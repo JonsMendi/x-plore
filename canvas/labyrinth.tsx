@@ -1,4 +1,4 @@
-import { Box } from '@react-three/drei';
+import { Box, useTexture } from '@react-three/drei';
 import { useState, useEffect } from 'react';
 import { Vector3 } from 'three';
 
@@ -25,6 +25,7 @@ export const wallPositions: Vector3[] = [];
 
 const Labyrinth = () => {
   const [layout] = useState(initialLayout);
+  const texture = useTexture('/lichen_rock_diff_4k.jpg');
 
   // Clear wall positions before populating
   useEffect(() => {
@@ -49,7 +50,7 @@ const Labyrinth = () => {
                 args={[1, 4, 1]}
                 position={[colIndex - 6, 2, rowIndex - 7]}  // Adjust positions to fit the rotation
               >
-                <meshStandardMaterial attach="material" color="blue" />
+                <meshStandardMaterial attach="material" map={texture} />
               </Box>
             );
           }
