@@ -1,10 +1,14 @@
-import { useThree } from '@react-three/fiber';
 import { useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
 
 const moveSpeed = 0.1;
 
-const KeyboardControls = () => {
+type KeyboardControlsProps = {
+  setPlayerPosition: (position: Vector3) => void;
+};
+
+const KeyboardControls = ({ setPlayerPosition }: KeyboardControlsProps) => {
   const { camera } = useThree();
 
   useEffect(() => {
@@ -16,24 +20,29 @@ const KeyboardControls = () => {
       const right = new Vector3();
       right.crossVectors(camera.up, direction).normalize();
 
+      const moveVector = new Vector3();
+
       switch (event.key) {
         case 'w':
         case 'ArrowUp':
-          camera.position.add(direction.multiplyScalar(moveSpeed));
+          moveVector.copy(direction).multiplyScalar(moveSpeed);
           break;
         case 's':
         case 'ArrowDown':
-          camera.position.add(direction.multiplyScalar(-moveSpeed));
+          moveVector.copy(direction).multiplyScalar(-moveSpeed);
           break;
         case 'a':
         case 'ArrowLeft':
-          camera.position.add(right.multiplyScalar(moveSpeed));
+          moveVector.copy(right).multiplyScalar(moveSpeed);
           break;
         case 'd':
         case 'ArrowRight':
-          camera.position.add(right.multiplyScalar(-moveSpeed));
+          moveVector.copy(right).multiplyScalar(-moveSpeed);
           break;
       }
+
+      camera.position.add(moveVector);
+      setPlayerPosition(camera.position.clone());
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -41,7 +50,7 @@ const KeyboardControls = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [camera]);
+  }, [camera, setPlayerPosition]);
 
   return null;
 };
