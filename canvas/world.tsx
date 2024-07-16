@@ -6,6 +6,7 @@ import CameraControls from './use-camera-controls';
 import Labyrinth from './labyrinth';
 import { Vector3 } from 'three';
 import { labyrinthLayouts, LayoutType } from './labyrinth-layouts';
+import LevelDisplay from './level-display';
 
 const initialLayout = labyrinthLayouts[0];
 
@@ -35,11 +36,12 @@ const ThreeDWorld = () => {
           <meshStandardMaterial attach="material" color="gray" />
         </Plane>
         <Labyrinth layout={layout.layout} endPosition={layout.endPosition} />
-        <ambientLight intensity={0.1} />
+        <ambientLight intensity={0.2} />
         <pointLight position={playerPosition.toArray()} intensity={4} distance={5} />
         <KeyboardControls setPlayerPosition={setPlayerPosition} />
         <CameraControls />
       </Canvas>
+      <LevelDisplay currentLevel={layoutIndex + 1} totalLevels={labyrinthLayouts.length} />
     </div>
   );
 };
