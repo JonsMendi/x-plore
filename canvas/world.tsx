@@ -7,6 +7,7 @@ import Labyrinth from './labyrinth';
 import { Vector3 } from 'three';
 import { labyrinthLayouts, LayoutType } from './labyrinth-layouts';
 import LevelDisplay from './level-display';
+import AudioPlayer from './audio-player';
 
 const initialLayout = labyrinthLayouts[0];
 
@@ -42,6 +43,7 @@ const ThreeDWorld = () => {
         <CameraControls />
       </Canvas>
       <LevelDisplay currentLevel={layoutIndex + 1} totalLevels={labyrinthLayouts.length} />
+      <AudioPlayer />
     </div>
   );
 };

@@ -5,16 +5,11 @@ import { LayoutType } from './labyrinth-layouts';
 
 export const wallPositions: Vector3[] = [];
 
-type LabyrinthProps = {
-  layout: number[][];
-  endPosition: { x: number, y: number, z: number };
-};
-
-const Labyrinth: React.FC<LabyrinthProps> = ({ layout, endPosition }) => {
+const Labyrinth: React.FC<LayoutType> = ({ layout, endPosition }) => {
   const texture = useTexture('/lichen_rock_diff_4k.jpg');
 
   useEffect(() => {
-    wallPositions.length = 0; // Clear existing positions
+    wallPositions.length = 0;
     layout.forEach((row, rowIndex) =>
       row.forEach((cell, colIndex) => {
         if (cell === 1) {
@@ -33,7 +28,7 @@ const Labyrinth: React.FC<LabyrinthProps> = ({ layout, endPosition }) => {
               <Box
                 key={`${rowIndex}-${colIndex}`}
                 args={[1, 4, 1]}
-                position={[colIndex - layout[0].length / 2, 2, rowIndex - layout.length / 2]}  // Adjust positions to fit the rotation
+                position={[colIndex - layout[0].length / 2, 2, rowIndex - layout.length / 2]}
               >
                 <meshStandardMaterial attach="material" map={texture} />
               </Box>
