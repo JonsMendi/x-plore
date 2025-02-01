@@ -1,14 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React from "react";
 
-const AudioPlayer: React.FC = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+interface AudioPlayerProps {
+  audioRef: React.RefObject<HTMLAudioElement>;
+}
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
-  }, []);
-
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioRef }) => {
   return (
     <audio ref={audioRef} loop>
       <source src="/MartianOutback-JohnPatitucci.mp3" type="audio/mpeg" />
