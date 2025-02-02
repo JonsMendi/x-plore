@@ -8,8 +8,8 @@ This project serves as an **exploration of game development** using **Three.js**
 
 - [Next.js](https://nextjs.org/)  
 - [TypeScript](https://www.typescriptlang.org/)
-- [Three.js Fiber](https://github.com/pmndrs/react-three-fiber)
-- [Drei](https://github.com/pmndrs/drei)
+- [React-Three-Fiber](https://github.com/pmndrs/react-three-fiber)
+- [React-Three-Drei](https://github.com/pmndrs/drei)
 - [Tailwind CSS](https://tailwindcss.com/) 
 
 ## 📌 Features
