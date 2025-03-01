@@ -3,7 +3,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { wallPositions } from "./labyrinth";
 
-const moveSpeed = 0.12;
+const moveSpeed = 0.3;
 const smoothingFactor = 0.1;
 
 type KeyboardControlHandlerProps = {
