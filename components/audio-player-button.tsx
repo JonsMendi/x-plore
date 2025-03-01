@@ -1,4 +1,5 @@
 import React from "react";
+import { Volume2, VolumeX } from "lucide-react";
 
 interface AudioPlayerButtonProps {
   toggle: any;
@@ -14,16 +15,15 @@ const AudioPlayerButton: React.FC<AudioPlayerButtonProps> = ({
       onClick={toggle}
       style={{
         position: "absolute",
-        bottom: "20px",
-        right: "80px",
+        top: "20px",
+        right: "20px",
         color: "white",
         fontSize: "18px",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
         padding: "10px",
         borderRadius: "5px",
       }}
     >
-      {isAudioPlaying ? "Pause Music" : "Play Music"}
+      {isAudioPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
     </button>
   );
 };

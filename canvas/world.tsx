@@ -1,34 +1,62 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { PerspectiveCamera, Plane, KeyboardControls } from "@react-three/drei";
+import {
+  PerspectiveCamera,
+  Plane,
+  KeyboardControls,
+  Html,
+  useProgress,
+} from "@react-three/drei";
+import { Vector3 } from "three";
 import CameraControls from "./use-camera-controls";
 import Labyrinth from "./labyrinth";
-import { Vector3 } from "three";
 import { labyrinthLayouts, LayoutType } from "./labyrinth-layouts";
-import LevelDisplay from "./level-display";
-import AudioPlayer from "./audio-player";
+import AudioPlayer from "../components/audio-player";
 import KeyboardControlHandler from "./keyboard-controls";
-import AudioPlayerButton from "./audio-player-button";
+import AudioPlayerButton from "../components/audio-player-button";
+import PlayerBoard from "../components/player-board";
 
 const initialLayout = labyrinthLayouts[0];
 
-const ThreeDWorld = () => {
-  const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12)); // Initial position
+const Loader = () => {
+  const { progress } = useProgress();
+  return (
+    <Html center>
+      <div className="text-white text-2xl">{progress.toFixed(2)}% loaded</div>
+    </Html>
+  );
+};
+
+interface ThreeDWorldProps {
+  setIsDialogOpen: (isOpen: boolean) => void;
+  setDialogMessage: (message: string) => void;
+  setResetTimer: (resetFn: () => void) => void;
+  setResetLevel: (resetFn: () => void) => void;
+}
+
+const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
+  setIsDialogOpen,
+  setResetTimer,
+  setResetLevel,
+  setDialogMessage
+}) => {
+  const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12));
   const [layoutIndex, setLayoutIndex] = useState(0);
   const [layout, setLayout] = useState<LayoutType>(initialLayout);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Detect when player reaches the end goal
   useEffect(() => {
-    const endGoal = new Vector3(
-      layout.endPosition.x,
-      layout.endPosition.y,
-      layout.endPosition.z
-    );
+    const endGoal = new Vector3(layout.endPosition.x, layout.endPosition.y, layout.endPosition.z);
     if (playerPosition.distanceTo(endGoal) < 1) {
-      setPlayerPosition(new Vector3(3, 1, 12)); // Reset to the initial position
-      setLayoutIndex((prevIndex) => (prevIndex + 1) % labyrinthLayouts.length); // Move to the next layout
+      if (layoutIndex === labyrinthLayouts.length - 1) {
+        // Last level completed -> Trigger different dialog
+        setIsDialogOpen(true);
+        setDialogMessage("You are still not good enough."); 
+      } else {
+        setPlayerPosition(new Vector3(3, 1, 12));
+        setLayoutIndex((prevIndex) => prevIndex + 1);
+      }
     }
   }, [playerPosition]);
 
@@ -36,7 +64,13 @@ const ThreeDWorld = () => {
     setLayout(labyrinthLayouts[layoutIndex]);
   }, [layoutIndex]);
 
-  // Toggle Audio Playback
+  useEffect(() => {
+    setResetLevel(() => () => {
+      setLayoutIndex(0);
+      setPlayerPosition(new Vector3(3, 1, 12));
+    });
+  }, [setResetLevel]);
+
   const toggleAudio = () => {
     if (audioRef.current) {
       if (isAudioPlaying) {
@@ -53,7 +87,7 @@ const ThreeDWorld = () => {
   };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen relative">
       <KeyboardControls
         map={[
           { name: "forward", keys: ["ArrowUp", "w"] },
@@ -63,33 +97,48 @@ const ThreeDWorld = () => {
         ]}
       >
         <Canvas className="w-full h-full" style={{ background: "black" }}>
-          <PerspectiveCamera makeDefault position={playerPosition.toArray()} />
-          <Plane
-            args={[100, 100]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            position={[0, 0, 0]}
-          >
-            <meshStandardMaterial attach="material" color="gray" />
-          </Plane>
-          <Labyrinth layout={layout.layout} endPosition={layout.endPosition} />
-          <ambientLight intensity={0.2} />
-          <pointLight
-            position={playerPosition.toArray()}
-            intensity={4}
-            distance={5}
-          />
-          <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
-          <CameraControls />
+          <Suspense fallback={<Loader />}>
+            <PerspectiveCamera
+              makeDefault
+              position={playerPosition.toArray()}
+            />
+            <Plane
+              args={[100, 100]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              position={[0, 0, 0]}
+            >
+              <meshStandardMaterial attach="material" color="gray" />
+            </Plane>
+            <Labyrinth
+              layout={layout.layout}
+              endPosition={layout.endPosition}
+            />
+            <ambientLight intensity={0.2} />
+            <pointLight
+              position={playerPosition.toArray()}
+              intensity={4}
+              distance={5}
+            />
+            <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
+            <CameraControls />
+          </Suspense>
         </Canvas>
-        <LevelDisplay
-          currentLevel={layoutIndex + 1}
-          totalLevels={labyrinthLayouts.length}
-        />
-        <AudioPlayerButton
-          toggle={toggleAudio}
-          isAudioPlaying={isAudioPlaying}
-        />
-        <AudioPlayer audioRef={audioRef} />
+
+        {/* UI Components */}
+        <div>
+          <PlayerBoard
+            currentLevel={layoutIndex + 1}
+            totalLevels={labyrinthLayouts.length}
+            setDialogMessage={setDialogMessage}
+            setIsDialogOpen={setIsDialogOpen}
+            setResetTimer={setResetTimer}
+          />
+          <AudioPlayerButton
+            toggle={toggleAudio}
+            isAudioPlaying={isAudioPlaying}
+          />
+          <AudioPlayer audioRef={audioRef} />
+        </div>
       </KeyboardControls>
     </div>
   );
