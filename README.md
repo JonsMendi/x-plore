@@ -21,7 +21,7 @@ This project serves as an **exploration of game development** using **Three.js**
 
 ## 📡 Deployment
 X-Plore is deployed on Vercel and automatically updates with each GitHub push.
-- Live Demo: https://x-plore-4d3z3m54o-jonsmendis-projects.vercel.app/
+- Live Demo: https://x-plore-9ghglnn5p-jonsmendis-projects.vercel.app/
 
 ## Notes
 🚧 This project is a work in progress!
