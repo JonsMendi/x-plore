@@ -16,6 +16,8 @@ import KeyboardControlHandler from "./keyboard-controls";
 import AudioPlayerButton from "../components/audio-player-button";
 import PlayerBoard from "../components/player-board";
 import { ThreeDWorldProps } from "./types";
+import Tree from "@/components/3D/Trees";
+import Thunder, { thunderSounds } from "@/components/3D/Thunder";
 
 const initialLayout = labyrinthLayouts[0];
 
@@ -35,6 +37,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
 };
 
 const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
+  isDialogOpen,
   setIsDialogOpen,
   setResetTimer,
   setResetLevel,
@@ -47,6 +50,13 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   const [layout, setLayout] = useState<LayoutType>(initialLayout);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const thunderAudioRefs = useRef(thunderSounds.map(() => new Audio()));
+
+  useEffect(() => {
+    if (isDialogOpen) {
+      document.exitPointerLock();
+    }
+  }, [isDialogOpen]);
 
   useEffect(() => {
     const endGoal = new Vector3(
@@ -82,14 +92,18 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
       if (isAudioPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current
-          .play()
-          .catch(() =>
-            console.log("Autoplay blocked, waiting for user interaction.")
-          );
+        audioRef.current.play().catch(() => console.log("Autoplay blocked."));
       }
-      setIsAudioPlaying(!isAudioPlaying);
     }
+
+    thunderAudioRefs.current.forEach((audio) => {
+      if (isAudioPlaying) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    });
+
+    setIsAudioPlaying(!isAudioPlaying);
   };
 
   return (
@@ -119,12 +133,23 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
               layout={layout.layout}
               endPosition={layout.endPosition}
             />
-            <ambientLight intensity={0.2} />
+            <Tree position={[-20, 0, -35]} scale={13} />
+            <Tree position={[0, 0, -35]} scale={25} />
+            <Tree position={[20, 0, -15]} scale={15} />
+            <Tree position={[20, 0, 10]} scale={12} />
+            <Tree position={[20, 0, 25]} scale={15} />
+            <Tree position={[5, 0, 25]} scale={10} />
+            <Tree position={[-10, 0, 25]} scale={11} />
+            <Tree position={[-20, 0, 10]} scale={10} />
+            <Tree position={[-20, 0, -10]} scale={13} />
+
+            <ambientLight intensity={0.1} />
             <pointLight
               position={playerPosition.toArray()}
-              intensity={4}
-              distance={5}
+              intensity={7}
+              distance={3}
             />
+            <Thunder thunderAudioRefs={thunderAudioRefs} isAudioPlaying={isAudioPlaying} />
             <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
             <CameraControls />
           </Suspense>

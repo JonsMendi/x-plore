@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import flameIcon from "../public/flame-icon.svg";
 import { GameDialogProps } from "./types";
@@ -11,6 +11,12 @@ const GameDialog: React.FC<GameDialogProps> = ({
   resetTimer,
   resetLevel,
 }) => {
+  useEffect(() => {
+    if (!isOpen) {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (

@@ -4,7 +4,7 @@ import { Vector3 } from "three";
 import { wallPositions } from "./labyrinth";
 import { KeyboardControlHandlerProps } from "./types";
 
-const moveSpeed = 0.3;
+const moveSpeed = 0.35;
 const smoothingFactor = 0.1;
 
 // Collision detection helper
@@ -36,7 +36,6 @@ const KeyboardControlHandler = ({
     const rightVector = new Vector3();
     rightVector.crossVectors(camera.up, direction).normalize();
 
-    const moveVector = new Vector3();
     const newPosition = camera.position.clone();
 
     if (forward) newPosition.addScaledVector(direction, moveSpeed);

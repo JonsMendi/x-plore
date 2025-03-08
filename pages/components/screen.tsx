@@ -35,6 +35,7 @@ const Screen: NextPage = () => {
 
       {gameStarted ? (
         <ThreeDWorld
+          isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
           setDialogMessage={setDialogMessage}
           setResetTimer={setResetTimer}
