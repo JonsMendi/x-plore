@@ -133,11 +133,11 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             setIsDialogOpen={setIsDialogOpen}
             setResetTimer={setResetTimer}
           />
-          {/* <AudioPlayerButton
+          <AudioPlayerButton
             toggle={toggleAudio}
             isAudioPlaying={isAudioPlaying}
-          /> */}
-          {/* <AudioPlayer audioRef={audioRef} /> */}
+          />
+          <AudioPlayer audioRef={audioRef} />
         </div>
       </KeyboardControls>
     </div>
