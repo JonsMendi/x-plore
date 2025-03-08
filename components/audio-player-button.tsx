@@ -1,10 +1,6 @@
 import React from "react";
 import { Volume2, VolumeX } from "lucide-react";
-
-interface AudioPlayerButtonProps {
-  toggle: any;
-  isAudioPlaying: any;
-}
+import { AudioPlayerButtonProps } from "./types";
 
 const AudioPlayerButton: React.FC<AudioPlayerButtonProps> = ({
   toggle,

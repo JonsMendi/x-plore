@@ -1,9 +1,5 @@
 import React from "react";
-
-type LevelDisplayProps = {
-  currentLevel: number;
-  totalLevels: number;
-};
+import { LevelDisplayProps } from "./types";
 
 const LevelDisplay: React.FC<LevelDisplayProps> = ({
   currentLevel,

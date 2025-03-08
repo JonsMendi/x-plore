@@ -2,13 +2,10 @@ import { useKeyboardControls } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { wallPositions } from "./labyrinth";
+import { KeyboardControlHandlerProps } from "./types";
 
 const moveSpeed = 0.3;
 const smoothingFactor = 0.1;
-
-type KeyboardControlHandlerProps = {
-  setPlayerPosition: (position: Vector3) => void;
-};
 
 // Collision detection helper
 const checkCollision = (position: Vector3): boolean => {

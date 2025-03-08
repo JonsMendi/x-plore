@@ -15,11 +15,18 @@ import AudioPlayer from "../components/audio-player";
 import KeyboardControlHandler from "./keyboard-controls";
 import AudioPlayerButton from "../components/audio-player-button";
 import PlayerBoard from "../components/player-board";
+import { ThreeDWorldProps } from "./types";
 
 const initialLayout = labyrinthLayouts[0];
 
-const Loader = () => {
+const Loader = ({ onComplete }: { onComplete: () => void }) => {
   const { progress } = useProgress();
+  useEffect(() => {
+    if (progress >= 100) {
+      onComplete();
+    }
+  }, [progress, onComplete]);
+
   return (
     <Html center>
       <div className="text-white text-2xl">{progress.toFixed(2)}% loaded</div>
@@ -27,18 +34,13 @@ const Loader = () => {
   );
 };
 
-interface ThreeDWorldProps {
-  setIsDialogOpen: (isOpen: boolean) => void;
-  setDialogMessage: (message: string) => void;
-  setResetTimer: (resetFn: () => void) => void;
-  setResetLevel: (resetFn: () => void) => void;
-}
-
 const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   setIsDialogOpen,
   setResetTimer,
   setResetLevel,
-  setDialogMessage
+  setDialogMessage,
+  onSceneLoaded,
+  startTimer,
 }) => {
   const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12));
   const [layoutIndex, setLayoutIndex] = useState(0);
@@ -47,12 +49,16 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    const endGoal = new Vector3(layout.endPosition.x, layout.endPosition.y, layout.endPosition.z);
+    const endGoal = new Vector3(
+      layout.endPosition.x,
+      layout.endPosition.y,
+      layout.endPosition.z
+    );
     if (playerPosition.distanceTo(endGoal) < 1) {
       if (layoutIndex === labyrinthLayouts.length - 1) {
         // Last level completed -> Trigger different dialog
         setIsDialogOpen(true);
-        setDialogMessage("You are still not good enough."); 
+        setDialogMessage("You are still not good enough.");
       } else {
         setPlayerPosition(new Vector3(3, 1, 12));
         setLayoutIndex((prevIndex) => prevIndex + 1);
@@ -97,7 +103,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
         ]}
       >
         <Canvas className="w-full h-full" style={{ background: "black" }}>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<Loader onComplete={onSceneLoaded} />}>
             <PerspectiveCamera
               makeDefault
               position={playerPosition.toArray()}
@@ -132,6 +138,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             setDialogMessage={setDialogMessage}
             setIsDialogOpen={setIsDialogOpen}
             setResetTimer={setResetTimer}
+            startTimer={startTimer}
           />
           <AudioPlayerButton
             toggle={toggleAudio}

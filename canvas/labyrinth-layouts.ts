@@ -1,5 +1,3 @@
-// labyrinthLayouts.ts
-
 export type LayoutType = {
     layout: number[][];
     endPosition: { x: number, y: number, z: number };

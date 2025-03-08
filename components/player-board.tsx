@@ -1,21 +1,15 @@
 import React from "react";
 import Timer from "./timer";
 import LevelDisplay from "./level-display";
-
-interface PlayerBoardProps {
-  currentLevel: number;
-  totalLevels: number;
-  setDialogMessage: (message: string) => void;
-  setIsDialogOpen: (isOpen: boolean) => void;
-  setResetTimer: (resetFn: () => void) => void;
-}
+import { PlayerBoardProps } from "./types";
 
 const PlayerBoard: React.FC<PlayerBoardProps> = ({
   currentLevel,
   totalLevels,
   setDialogMessage,
   setIsDialogOpen,
-  setResetTimer
+  setResetTimer,
+  startTimer,
 }) => {
   return (
     <>
@@ -33,7 +27,12 @@ const PlayerBoard: React.FC<PlayerBoardProps> = ({
           gap: "20px",
         }}
       >
-        <Timer setDialogMessage={setDialogMessage} setIsDialogOpen={setIsDialogOpen} setResetTimer={setResetTimer}  />
+        <Timer
+          setDialogMessage={setDialogMessage}
+          setIsDialogOpen={setIsDialogOpen}
+          setResetTimer={setResetTimer}
+          startTimer={startTimer}
+        />
         <LevelDisplay currentLevel={currentLevel} totalLevels={totalLevels} />
       </div>
     </>

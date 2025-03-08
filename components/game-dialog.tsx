@@ -1,23 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import flameIcon from "../public/flame-icon.svg";
+import { GameDialogProps } from "./types";
 
-interface GameDialogProps {
-  isOpen: boolean;
-  message: string;
-  buttonText: string;
-  onClose: () => void;
-  resetTimer: (() => void) | null;
-  resetLevel: (() => void) | null;
-}
-
-const GameDialog: React.FC<GameDialogProps> = ({ 
-  isOpen, 
-  message, 
-  buttonText, 
-  onClose, 
-  resetTimer, 
-  resetLevel 
+const GameDialog: React.FC<GameDialogProps> = ({
+  isOpen,
+  message,
+  buttonText,
+  onClose,
+  resetTimer,
+  resetLevel,
 }) => {
   if (!isOpen) return null;
 
