@@ -1,6 +1,7 @@
 export type LayoutType = {
     layout: number[][];
     endPosition: { x: number, y: number, z: number };
+    entrancePosition?: { x: number, y: number, z: number };
   };
   
   export const labyrinthLayouts: LayoutType[] = [
@@ -22,6 +23,7 @@ export type LayoutType = {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
       ],
       endPosition: { x: -2, y: 0.5, z: 0 },
+      entrancePosition: { x: 4, y: 0.5, z: 6 },
     },
     {
       layout: [
@@ -40,6 +42,7 @@ export type LayoutType = {
         [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       ],
       endPosition: { x: 0, y: 0.5, z: -1.5 },
+      entrancePosition: { x: -5, y: 0.5, z: 6 },
     },
     {
         layout: [
@@ -58,6 +61,7 @@ export type LayoutType = {
           [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
         ],
         endPosition: { x: 0, y: 0.5, z: -1.5 },
+        entrancePosition: { x: -1, y: 0.5, z: 6 },
       },
       {
         layout: [
@@ -76,6 +80,7 @@ export type LayoutType = {
           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
         ],
         endPosition: { x: -1, y: 0.5, z: 2.5 },
+        entrancePosition: { x: 4, y: 0.5, z: 6 },
       },
       {
         layout: [
@@ -94,6 +99,7 @@ export type LayoutType = {
           [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1],
         ],
         endPosition: { x: -1, y: 0.5, z: 0.5 },
+        entrancePosition: { x: 1, y: 0.5, z: 6 },
       },
   ];
   

@@ -18,6 +18,7 @@ import PlayerBoard from "../components/player-board";
 import { ThreeDWorldProps } from "./types";
 import Tree from "@/components/3D/Trees";
 import Thunder, { thunderSounds } from "@/components/3D/Thunder";
+import KeyboardLegend from "@/components/keyboard-legend";
 
 const initialLayout = labyrinthLayouts[0];
 
@@ -132,6 +133,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             <Labyrinth
               layout={layout.layout}
               endPosition={layout.endPosition}
+              entrancePosition={layout.entrancePosition}
             />
             <Tree position={[-20, 0, -35]} scale={13} />
             <Tree position={[0, 0, -35]} scale={25} />
@@ -149,7 +151,21 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
               intensity={7}
               distance={3}
             />
-            <Thunder thunderAudioRefs={thunderAudioRefs} isAudioPlaying={isAudioPlaying} />
+            {layout.entrancePosition && (
+              <pointLight
+                position={[
+                  layout.entrancePosition.x,
+                  layout.entrancePosition.y + 2,
+                  layout.entrancePosition.z,
+                ]}
+                intensity={10}
+                distance={3}
+              />
+            )}
+            <Thunder
+              thunderAudioRefs={thunderAudioRefs}
+              isAudioPlaying={isAudioPlaying}
+            />
             <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
             <CameraControls />
           </Suspense>
@@ -170,6 +186,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             isAudioPlaying={isAudioPlaying}
           />
           <AudioPlayer audioRef={audioRef} />
+          <KeyboardLegend />
         </div>
       </KeyboardControls>
     </div>

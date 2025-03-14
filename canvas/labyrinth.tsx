@@ -1,4 +1,4 @@
-import { Box, MeshDistortMaterial, MeshReflectorMaterial, useTexture } from "@react-three/drei";
+import { Box, MeshDistortMaterial, useTexture } from "@react-three/drei";
 import { useEffect } from "react";
 import { Vector3 } from "three";
 import { LayoutType } from "./labyrinth-layouts";
