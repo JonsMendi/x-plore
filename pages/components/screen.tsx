@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import ThreeDWorld from "../../canvas/world";
 import GameDialog from "@/components/game-dialog";
+import StartCube from "@/canvas/start-cube";
 
 const Screen: NextPage = () => {
   const [gameStarted, setGameStarted] = useState(false);
@@ -12,6 +13,7 @@ const Screen: NextPage = () => {
   const [resetLevel, setResetLevel] = useState<(() => void) | null>(null);
   const [sceneLoaded, setSceneLoaded] = useState(false);
   const [startTimer, setStartTimer] = useState(false);
+  const [hover, setHover] = useState(false);
 
   const handleSceneLoaded = () => {
     setSceneLoaded(true);
@@ -45,13 +47,20 @@ const Screen: NextPage = () => {
         />
       ) : (
         <div className="text-center">
-          <button
+          <div className="text-gray-700 text-3xl font-bold px-10 py-5 rounded-md">
+            <span className="text-red-500">X</span>-Plore
+          </div>
+
+          <StartCube
             onClick={startGame}
-            className="text-black text-9xl font-bold bg-gray-800 px-10 py-5 rounded-md hover:bg-gray-700 transition"
+            onPointerOver={() => setHover(true)}
+            onPointerOut={() => setHover(false)}
+          />
+          <p
+            className={`mt-2 absolute bottom-4 left-1/2 transform -translate-x-1/2 transition-colors duration-300 ${
+              hover ? "text-gray-300" : "text-gray-600"
+            }`}
           >
-            <span className="text-red-500 px-2">X</span>-Plore
-          </button>
-          <p className="text-gray-600 mt-2 absolute bottom-4 left-1/2 transform -translate-x-1/2">
             let me tell you how bad you are at this.
           </p>
         </div>
