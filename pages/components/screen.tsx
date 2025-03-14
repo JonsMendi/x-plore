@@ -51,7 +51,7 @@ const Screen: NextPage = () => {
           >
             <span className="text-red-500 px-2">X</span>-Plore
           </button>
-          <p className="text-gray-800 mt-2 absolute bottom-4 left-1/2 transform -translate-x-1/2">
+          <p className="text-gray-600 mt-2 absolute bottom-4 left-1/2 transform -translate-x-1/2">
             let me tell you how bad you are at this.
           </p>
         </div>

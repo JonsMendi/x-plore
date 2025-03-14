@@ -21,7 +21,7 @@ const PlayerBoard: React.FC<PlayerBoardProps> = ({
           transform: "translateX(-50%)",
           display: "flex",
           alignItems: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "#333",
           padding: "10px",
           borderRadius: "5px",
           gap: "20px",
