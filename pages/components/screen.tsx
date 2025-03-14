@@ -47,7 +47,7 @@ const Screen: NextPage = () => {
         />
       ) : (
         <div className="text-center">
-          <div className="text-gray-700 text-3xl font-bold px-10 py-5 rounded-md">
+          <div className="text-gray-700 text-6xl font-bold px-10 py-5 rounded-md">
             <span className="text-red-500">X</span>-Plore
           </div>
 
