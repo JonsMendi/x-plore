@@ -23,7 +23,7 @@ export type LayoutType = {
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
       ],
       endPosition: { x: -2, y: 0.5, z: 0 },
-      entrancePosition: { x: 4, y: 0.5, z: 6 },
+      entrancePosition: { x: 3.5, y: 0.5, z: 6 },
     },
     {
       layout: [
