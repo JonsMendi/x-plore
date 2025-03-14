@@ -27,4 +27,4 @@ X-Plore is deployed on Vercel and automatically updates with each GitHub push.
 🚧 This project is a work in progress!
 Expect improvements, new features, and optimizations in future updates.
 
-# 🎮 Ready to X-Plore? Start the Game and Find the Red Cube! 🚀
+# 🎮 Ready to X-Plore? Start the Game and Find the Strange Cube! 🚀
