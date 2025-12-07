@@ -22,7 +22,7 @@ const Timer: React.FC<TimerProps> = ({
   }, [startTimer, seconds, setIsDialogOpen, setDialogMessage]);
 
   useEffect(() => {
-    setResetTimer(() => () => setSeconds(66));
+    setResetTimer(() => setSeconds(66));
   }, [setResetTimer]);
 
   return <div className="text-white text-lg">hurry-up: {seconds}s</div>;

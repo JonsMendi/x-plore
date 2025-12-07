@@ -1,29 +1,13 @@
-import { useState } from "react";
+import { observer } from "mobx-react-lite";
 import type { NextPage } from "next";
 import Head from "next/head";
 import ThreeDWorld from "../../canvas/world";
 import GameDialog from "@/components/game-dialog";
 import StartCube from "@/canvas/start-cube";
+import { gameStore } from "../../stores/GameStore";
+import { dialogStore } from "../../stores/DialogStore";
 
-const Screen: NextPage = () => {
-  const [gameStarted, setGameStarted] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState("");
-  const [resetTimer, setResetTimer] = useState<(() => void) | null>(null);
-  const [resetLevel, setResetLevel] = useState<(() => void) | null>(null);
-  const [sceneLoaded, setSceneLoaded] = useState(false);
-  const [startTimer, setStartTimer] = useState(false);
-  const [hover, setHover] = useState(false);
-
-  const handleSceneLoaded = () => {
-    setSceneLoaded(true);
-    setStartTimer(true);
-  };
-
-  const startGame = () => {
-    setGameStarted(true);
-  };
-
+const Screen: NextPage = observer(() => {
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black relative">
       <Head>
@@ -35,15 +19,15 @@ const Screen: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {gameStarted ? (
+      {gameStore.gameStarted ? (
         <ThreeDWorld
-          isDialogOpen={isDialogOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          setDialogMessage={setDialogMessage}
-          setResetTimer={setResetTimer}
-          setResetLevel={setResetLevel}
-          onSceneLoaded={handleSceneLoaded}
-          startTimer={startTimer}
+          isDialogOpen={dialogStore.isDialogOpen}
+          setIsDialogOpen={dialogStore.setIsDialogOpen}
+          setDialogMessage={dialogStore.setDialogMessage}
+          setResetTimer={gameStore.setResetTimer}
+          setResetLevel={gameStore.setResetLevel}
+          onSceneLoaded={gameStore.handleSceneLoaded}
+          startTimer={gameStore.startTimer}
         />
       ) : (
         <div className="text-center">
@@ -52,13 +36,13 @@ const Screen: NextPage = () => {
           </div>
 
           <StartCube
-            onClick={startGame}
-            onPointerOver={() => setHover(true)}
-            onPointerOut={() => setHover(false)}
+            onClick={gameStore.startGame}
+            onPointerOver={() => gameStore.setHover(true)}
+            onPointerOut={() => gameStore.setHover(false)}
           />
           <p
             className={`mt-2 absolute bottom-4 left-1/2 transform -translate-x-1/2 transition-colors duration-300 ${
-              hover ? "text-gray-300" : "text-gray-600"
+              gameStore.hover ? "text-gray-300" : "text-gray-600"
             }`}
           >
             let me tell you how bad you are at this.
@@ -66,22 +50,22 @@ const Screen: NextPage = () => {
         </div>
       )}
 
-      {sceneLoaded && (
+      {gameStore.sceneLoaded && (
         <GameDialog
-          isOpen={isDialogOpen}
-          message={dialogMessage}
+          isOpen={dialogStore.isDialogOpen}
+          message={dialogStore.dialogMessage}
           buttonText={
-            dialogMessage === "You are not good at this."
+            dialogStore.dialogMessage === "You are not good at this."
               ? "Yes, I am not."
               : "I know."
           }
-          onClose={() => setIsDialogOpen(false)}
-          resetTimer={resetTimer}
-          resetLevel={resetLevel}
+          onClose={dialogStore.closeDialog}
+          resetTimer={gameStore.resetTimer}
+          resetLevel={gameStore.resetLevel}
         />
       )}
     </div>
   );
-};
+});
 
 export default Screen;
