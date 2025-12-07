@@ -1,24 +1,19 @@
 import { useState } from "react";
+import { observer } from "mobx-react-lite";
 import type { NextPage } from "next";
 import Head from "next/head";
 import ThreeDWorld from "../../canvas/world";
 import GameDialog from "@/components/game-dialog";
 import StartCube from "@/canvas/start-cube";
+import { gameStore } from "../../stores/GameStore";
 
-const Screen: NextPage = () => {
+const Screen: NextPage = observer(() => {
   const [gameStarted, setGameStarted] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [resetTimer, setResetTimer] = useState<(() => void) | null>(null);
   const [resetLevel, setResetLevel] = useState<(() => void) | null>(null);
-  const [sceneLoaded, setSceneLoaded] = useState(false);
-  const [startTimer, setStartTimer] = useState(false);
   const [hover, setHover] = useState(false);
-
-  const handleSceneLoaded = () => {
-    setSceneLoaded(true);
-    setStartTimer(true);
-  };
 
   const startGame = () => {
     setGameStarted(true);
@@ -42,8 +37,8 @@ const Screen: NextPage = () => {
           setDialogMessage={setDialogMessage}
           setResetTimer={setResetTimer}
           setResetLevel={setResetLevel}
-          onSceneLoaded={handleSceneLoaded}
-          startTimer={startTimer}
+          onSceneLoaded={gameStore.handleSceneLoaded}
+          startTimer={gameStore.startTimer}
         />
       ) : (
         <div className="text-center">
@@ -66,7 +61,7 @@ const Screen: NextPage = () => {
         </div>
       )}
 
-      {sceneLoaded && (
+      {gameStore.sceneLoaded && (
         <GameDialog
           isOpen={isDialogOpen}
           message={dialogMessage}
@@ -82,6 +77,6 @@ const Screen: NextPage = () => {
       )}
     </div>
   );
-};
+});
 
 export default Screen;
