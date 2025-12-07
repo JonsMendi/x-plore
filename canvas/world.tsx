@@ -82,7 +82,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   }, [layoutIndex]);
 
   useEffect(() => {
-    setResetLevel(() => () => {
+    setResetLevel(() => {
       setLayoutIndex(0);
       setPlayerPosition(new Vector3(3, 1, 12));
     });
