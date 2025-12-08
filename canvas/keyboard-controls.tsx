@@ -3,6 +3,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { wallPositions } from "./labyrinth";
 import { KeyboardControlHandlerProps } from "./types";
+import { gameStore } from "@/stores/GameStore";
 
 const moveSpeed = 0.35;
 const smoothingFactor = 0.1;
@@ -29,6 +30,10 @@ const KeyboardControlHandler = ({
   const right = useKeyboardControls((state) => state.right);
 
   useFrame(() => {
+    if (!gameStore.gameStarted) {
+      return;
+    }
+
     const direction = new Vector3();
     camera.getWorldDirection(direction);
     direction.y = 0;

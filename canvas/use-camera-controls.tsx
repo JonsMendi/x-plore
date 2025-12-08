@@ -20,21 +20,22 @@ const CameraControls = () => {
     };
 
     const handlePointerLockChange = () => {
-      if (document.pointerLockElement === gl.domElement) {
-        isLocked.current = true;
-      } else {
-        isLocked.current = false;
-      }
+      isLocked.current = document.pointerLockElement !== null;
     };
 
-    gl.domElement.addEventListener('click', () => {
+    const handleCanvasClick = () => {
       gl.domElement.requestPointerLock();
-    });
+    };
+
+    handlePointerLockChange();
+
+    gl.domElement.addEventListener('click', handleCanvasClick);
 
     document.addEventListener('pointerlockchange', handlePointerLockChange);
     document.addEventListener('mousemove', handleMouseMove);
 
     return () => {
+      gl.domElement.removeEventListener('click', handleCanvasClick);
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       document.removeEventListener('mousemove', handleMouseMove);
     };
