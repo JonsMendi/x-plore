@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Vector2, Euler } from 'three';
+import { gameStore } from '@/stores/GameStore';
 
 const CameraControls = () => {
   const { camera, gl } = useThree();
@@ -20,21 +21,27 @@ const CameraControls = () => {
     };
 
     const handlePointerLockChange = () => {
-      if (document.pointerLockElement === gl.domElement) {
-        isLocked.current = true;
-      } else {
-        isLocked.current = false;
+      const wasLocked = isLocked.current;
+      isLocked.current = document.pointerLockElement !== null;
+      
+      if (wasLocked && !isLocked.current && gameStore.gameStarted) {
+        gameStore.setPaused(true);
       }
     };
 
-    gl.domElement.addEventListener('click', () => {
+    const handleCanvasClick = () => {
       gl.domElement.requestPointerLock();
-    });
+    };
+
+    handlePointerLockChange();
+
+    gl.domElement.addEventListener('click', handleCanvasClick);
 
     document.addEventListener('pointerlockchange', handlePointerLockChange);
     document.addEventListener('mousemove', handleMouseMove);
 
     return () => {
+      gl.domElement.removeEventListener('click', handleCanvasClick);
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       document.removeEventListener('mousemove', handleMouseMove);
     };

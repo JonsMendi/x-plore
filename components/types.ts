@@ -3,6 +3,7 @@ export interface TimerProps {
   setDialogMessage: (message: string) => void;
   setResetTimer: (resetFn: () => void) => void;
   startTimer: boolean;
+  isPaused: boolean;
 }
 
 export interface PlayerBoardProps {
@@ -12,6 +13,7 @@ export interface PlayerBoardProps {
   setIsDialogOpen: (isOpen: boolean) => void;
   setResetTimer: (resetFn: () => void) => void;
   startTimer: boolean;
+  isPaused: boolean;
 }
 
 export type LevelDisplayProps = {

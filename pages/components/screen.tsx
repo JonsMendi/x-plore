@@ -1,13 +1,39 @@
+import StartCube from "@/canvas/start-cube";
+import ThreeDWorld from "@/canvas/world";
+import GameDialog from "@/components/game-dialog";
+import PauseDialog from "@/components/pause-dialog";
 import { observer } from "mobx-react-lite";
 import type { NextPage } from "next";
 import Head from "next/head";
-import ThreeDWorld from "../../canvas/world";
-import GameDialog from "@/components/game-dialog";
-import StartCube from "@/canvas/start-cube";
-import { gameStore } from "../../stores/GameStore";
 import { dialogStore } from "../../stores/DialogStore";
+import { gameStore } from "../../stores/GameStore";
 
 const Screen: NextPage = observer(() => {
+  const requestPointerLock = () => {
+    if (typeof document === "undefined") return;
+    const lockTarget = document.body ?? document.documentElement;
+    const request = lockTarget?.requestPointerLock as
+      | (() => Promise<void> | void)
+      | undefined;
+    if (!request) return;
+    const result = request.call(lockTarget);
+    if (result && typeof (result as Promise<void>).catch === "function") {
+      (result as Promise<void>).catch((err) => {
+        console.warn("Pointer lock request failed", err);
+      });
+    }
+  };
+
+  const handleStartGame = () => {
+    gameStore.startGame();
+    requestPointerLock();
+  };
+
+  const handleResume = () => {
+    gameStore.setPaused(false);
+    requestPointerLock();
+  };
+
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black relative">
       <Head>
@@ -28,6 +54,7 @@ const Screen: NextPage = observer(() => {
           setResetLevel={gameStore.setResetLevel}
           onSceneLoaded={gameStore.handleSceneLoaded}
           startTimer={gameStore.startTimer}
+          isPaused={gameStore.isPaused}
         />
       ) : (
         <div className="text-center">
@@ -36,7 +63,7 @@ const Screen: NextPage = observer(() => {
           </div>
 
           <StartCube
-            onClick={gameStore.startGame}
+            onClick={handleStartGame}
             onPointerOver={() => gameStore.setHover(true)}
             onPointerOut={() => gameStore.setHover(false)}
           />
@@ -64,6 +91,8 @@ const Screen: NextPage = observer(() => {
           resetLevel={gameStore.resetLevel}
         />
       )}
+
+      <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />
     </div>
   );
 });

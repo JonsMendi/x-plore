@@ -8,6 +8,7 @@ export interface ThreeDWorldProps {
   setResetLevel: (resetFn: () => void) => void;
   onSceneLoaded: () => void;
   startTimer: boolean;
+  isPaused: boolean;
 }
 
 export type KeyboardControlHandlerProps = {

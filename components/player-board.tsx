@@ -10,6 +10,7 @@ const PlayerBoard: React.FC<PlayerBoardProps> = ({
   setIsDialogOpen,
   setResetTimer,
   startTimer,
+  isPaused,
 }) => {
   return (
     <>
@@ -32,6 +33,7 @@ const PlayerBoard: React.FC<PlayerBoardProps> = ({
           setIsDialogOpen={setIsDialogOpen}
           setResetTimer={setResetTimer}
           startTimer={startTimer}
+          isPaused={isPaused}
         />
         <LevelDisplay currentLevel={currentLevel} totalLevels={totalLevels} />
       </div>

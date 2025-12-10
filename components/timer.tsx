@@ -6,11 +6,12 @@ const Timer: React.FC<TimerProps> = ({
   setDialogMessage,
   setResetTimer,
   startTimer,
+  isPaused,
 }) => {
   const [seconds, setSeconds] = useState(66);
 
   useEffect(() => {
-    if (startTimer && seconds > 0) {
+    if (startTimer && !isPaused && seconds > 0) {
       const interval = setInterval(() => {
         setSeconds((prev) => prev - 1);
       }, 1000);
@@ -19,7 +20,7 @@ const Timer: React.FC<TimerProps> = ({
       setDialogMessage("You are not good at this.");
       setIsDialogOpen(true);
     }
-  }, [startTimer, seconds, setIsDialogOpen, setDialogMessage]);
+  }, [startTimer, isPaused, seconds, setIsDialogOpen, setDialogMessage]);
 
   useEffect(() => {
     setResetTimer(() => setSeconds(66));
