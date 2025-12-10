@@ -45,6 +45,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   setDialogMessage,
   onSceneLoaded,
   startTimer,
+  isPaused,
 }) => {
   const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12));
   const [layoutIndex, setLayoutIndex] = useState(0);
@@ -180,6 +181,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             setIsDialogOpen={setIsDialogOpen}
             setResetTimer={setResetTimer}
             startTimer={startTimer}
+            isPaused={isPaused}
           />
           <AudioPlayerButton
             toggle={toggleAudio}

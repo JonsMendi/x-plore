@@ -7,6 +7,7 @@ class GameStore {
   resetTimer: (() => void) | null = null;
   resetLevel: (() => void) | null = null;
   hover = false;
+  isPaused = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -34,6 +35,14 @@ class GameStore {
 
   setHover = (isHovering: boolean) => {
     this.hover = isHovering;
+  };
+
+  setPaused = (paused: boolean) => {
+    this.isPaused = paused;
+  };
+
+  togglePause = () => {
+    this.isPaused = !this.isPaused;
   };
 
   startGame = () => {

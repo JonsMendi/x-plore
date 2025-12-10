@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Vector2, Euler } from 'three';
+import { gameStore } from '@/stores/GameStore';
 
 const CameraControls = () => {
   const { camera, gl } = useThree();
@@ -20,7 +21,12 @@ const CameraControls = () => {
     };
 
     const handlePointerLockChange = () => {
+      const wasLocked = isLocked.current;
       isLocked.current = document.pointerLockElement !== null;
+      
+      if (wasLocked && !isLocked.current && gameStore.gameStarted) {
+        gameStore.setPaused(true);
+      }
     };
 
     const handleCanvasClick = () => {
