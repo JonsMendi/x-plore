@@ -1,5 +1,5 @@
-import React from "react";
-import { AudioPlayerProps } from "./types";
+import React from 'react'
+import { AudioPlayerProps } from './types'
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioRef }) => {
   return (
@@ -7,7 +7,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ audioRef }) => {
       <source src="/MartianOutback-JohnPatitucci.mp3" type="audio/mpeg" />
       Your browser does not support the audio element.
     </audio>
-  );
-};
+  )
+}
 
-export default AudioPlayer;
+export default AudioPlayer

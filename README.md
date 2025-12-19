@@ -6,24 +6,27 @@ This project serves as an **exploration of game development** using **Three.js**
 
 ## 🛠️ Tech Stack
 
-- [Next.js](https://nextjs.org/)  
+- [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [React-Three-Fiber](https://github.com/pmndrs/react-three-fiber)
 - [React-Three-Drei](https://github.com/pmndrs/drei)
-- [Tailwind CSS](https://tailwindcss.com/) 
+- [Tailwind CSS](https://tailwindcss.com/)
 
 ## 📌 Features
 
 ✔️ **3D Maze Navigation** – Move through the maze using **WASD / Arrow Keys**  
 ✔️ **Level Progression** – Find the red cube to advance to the next level  
 ✔️ **Smooth Camera Controls** – FPS-like movement with pointer lock  
-✔️ **Modern Web Technologies** – Built with **React Three Fiber & Drei**  
+✔️ **Modern Web Technologies** – Built with **React Three Fiber & Drei**
 
 ## 📡 Deployment
+
 X-Plore is deployed on Vercel and automatically updates with each GitHub push.
+
 - Live Demo: https://x-plore-gamin.vercel.app/
 
 ## Notes
+
 🚧 This project is a work in progress!
 Expect improvements, new features, and optimizations in future updates.
 
