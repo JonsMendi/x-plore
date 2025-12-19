@@ -1,4 +1,4 @@
-import { gameStore } from "@/stores/GameStore"
+import { gameStore } from '@/stores/GameStore'
 
 export const toggleAudio = () => {
   gameStore.initThunderAudio()
@@ -8,7 +8,7 @@ export const toggleAudio = () => {
   if (gameStore.audioRef?.current) {
     if (nextIsPlaying) {
       gameStore.audioRef.current.play().catch(() => {
-        console.log("Autoplay blocked.")
+        console.log('Autoplay blocked.')
       })
     } else {
       gameStore.audioRef.current.pause()

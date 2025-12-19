@@ -1,29 +1,29 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable } from 'mobx'
 
 class DialogStore {
-  isDialogOpen = false;
-  dialogMessage = "";
+  isDialogOpen = false
+  dialogMessage = ''
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this)
   }
 
   setIsDialogOpen = (isOpen: boolean) => {
-    this.isDialogOpen = isOpen;
-  };
+    this.isDialogOpen = isOpen
+  }
 
   setDialogMessage = (message: string) => {
-    this.dialogMessage = message;
-  };
+    this.dialogMessage = message
+  }
 
   openDialog = (message: string) => {
-    this.setDialogMessage(message);
-    this.setIsDialogOpen(true);
-  };
+    this.setDialogMessage(message)
+    this.setIsDialogOpen(true)
+  }
 
   closeDialog = () => {
-    this.setIsDialogOpen(false);
-  };
+    this.setIsDialogOpen(false)
+  }
 }
 
-export const dialogStore = new DialogStore();
+export const dialogStore = new DialogStore()

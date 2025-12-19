@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import Image from "next/image";
-import flameIcon from "../public/flame-icon.svg";
-import { GameDialogProps } from "./types";
+import { useEffect } from 'react'
+import Image from 'next/image'
+import flameIcon from '../public/flame-icon.svg'
+import { GameDialogProps } from './types'
 
 const GameDialog: React.FC<GameDialogProps> = ({
   isOpen,
@@ -13,11 +13,11 @@ const GameDialog: React.FC<GameDialogProps> = ({
 }) => {
   useEffect(() => {
     if (!isOpen) {
-      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     }
-  }, [isOpen]);
+  }, [isOpen])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
@@ -29,16 +29,16 @@ const GameDialog: React.FC<GameDialogProps> = ({
         <button
           className="mt-4 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
           onClick={() => {
-            onClose();
-            if (resetTimer) resetTimer();
-            if (resetLevel) resetLevel();
+            onClose()
+            if (resetTimer) resetTimer()
+            if (resetLevel) resetLevel()
           }}
         >
           {buttonText}
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default GameDialog;
+export default GameDialog

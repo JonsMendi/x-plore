@@ -1,6 +1,6 @@
-import { thunderSounds } from "@/components/3D/Thunder"
-import { makeAutoObservable } from "mobx"
-import type { RefObject } from "react"
+import { thunderSounds } from '@/components/3D/Thunder'
+import { makeAutoObservable } from 'mobx'
+import type { RefObject } from 'react'
 
 class GameStore {
   sceneLoaded = false
@@ -20,12 +20,12 @@ class GameStore {
   }
 
   initThunderAudio = () => {
-    if (typeof window === "undefined") return
+    if (typeof window === 'undefined') return
     if (this.thunderAudioRefs.length) return
 
     this.thunderAudioRefs = thunderSounds.map((src) => {
       const a = new Audio(src)
-      a.preload = "auto"
+      a.preload = 'auto'
       return a
     })
   }

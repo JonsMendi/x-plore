@@ -1,20 +1,17 @@
-import React from "react";
-import { LevelDisplayProps } from "./types";
+import React from 'react'
+import { LevelDisplayProps } from './types'
 
-const LevelDisplay: React.FC<LevelDisplayProps> = ({
-  currentLevel,
-  totalLevels,
-}) => {
+const LevelDisplay: React.FC<LevelDisplayProps> = ({ currentLevel, totalLevels }) => {
   return (
     <div
       style={{
-        color: "white",
-        fontSize: "18px",
+        color: 'white',
+        fontSize: '18px',
       }}
     >
       level: {currentLevel}/{totalLevels}
     </div>
-  );
-};
+  )
+}
 
-export default LevelDisplay;
+export default LevelDisplay

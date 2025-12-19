@@ -1,12 +1,9 @@
-import { useEffect, useState, useRef } from "react"
-import { DirectionalLight } from "three"
-import { ThunderProps } from "./types"
-import { gameStore } from "@/stores/GameStore"
+import { useEffect, useState, useRef } from 'react'
+import { DirectionalLight } from 'three'
+import { ThunderProps } from './types'
+import { gameStore } from '@/stores/GameStore'
 
-export const thunderSounds = [
-  "/audio/thunders/thunder1.mp3",
-  "/audio/thunders/thunder2.mp3",
-]
+export const thunderSounds = ['/audio/thunders/thunder1.mp3', '/audio/thunders/thunder2.mp3']
 
 const Thunder: React.FC<ThunderProps> = ({ isAudioPlaying }) => {
   const [lightIntensity, setLightIntensity] = useState(0)
@@ -33,7 +30,7 @@ const Thunder: React.FC<ThunderProps> = ({ isAudioPlaying }) => {
       if (!audio) return
 
       audio.currentTime = 0
-      audio.play().catch(() => console.log("Thunder sound blocked."))
+      audio.play().catch(() => console.log('Thunder sound blocked.'))
     }
 
     const flashThunder = () => {
@@ -42,9 +39,12 @@ const Thunder: React.FC<ThunderProps> = ({ isAudioPlaying }) => {
       setTimeout(() => setLightIntensity(0), 100 + Math.random() * 200)
     }
 
-    const interval = setInterval(() => {
-      if (Math.random() > 0.7) flashThunder()
-    }, Math.random() * 2000 + 1000)
+    const interval = setInterval(
+      () => {
+        if (Math.random() > 0.7) flashThunder()
+      },
+      Math.random() * 2000 + 1000,
+    )
 
     return () => clearInterval(interval)
   }, [isAudioPlaying, lastPlayedIndex])
