@@ -5,6 +5,5 @@ export interface TreeProps {
 }
 
 export interface ThunderProps {
-  thunderAudioRefs: React.MutableRefObject<HTMLAudioElement[]>;
   isAudioPlaying: boolean;
 }

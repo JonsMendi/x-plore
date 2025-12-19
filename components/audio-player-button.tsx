@@ -1,33 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { toggleAudio } from "@/helpers/canvas.helpers";
+import { gameStore } from "@/stores/GameStore";
 import { Volume2, VolumeX } from "lucide-react";
-import { AudioPlayerButtonProps } from "./types";
+import { observer } from "mobx-react-lite";
+import React from "react";
 
-const AudioPlayerButton: React.FC<AudioPlayerButtonProps> = ({
-  toggle,
-  isAudioPlaying,
+const AudioPlayerButton: React.FC = observer(({
 }) => {
-  const [showMessage, setShowMessage] = useState(true);
-
-  useEffect(() => {
-    if (!isAudioPlaying) {
-      setShowMessage(true);
-      const timer = setTimeout(() => {
-        setShowMessage(false);
-      }, 15000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isAudioPlaying]);
 
   return (
-    <div style={{ position: "absolute", top: "20px", right: "20px", display: "flex", alignItems: "center" }}>
-      {!isAudioPlaying && showMessage && (
-        <span style={{ color: "gray", marginRight: "10px", fontSize: "14px" }}>
-          Turn on sound for best experience
-        </span>
-      )}
+    <div style={{ display: "flex", alignItems: "center" }}>
+      
+      <span style={{ color: "gray", marginRight: "10px", fontSize: "14px" }}>
+        Sound:
+      </span>
+     
       <button
-        onClick={toggle}
+        onClick={toggleAudio}
         style={{
           color: "white",
           fontSize: "18px",
@@ -38,10 +26,10 @@ const AudioPlayerButton: React.FC<AudioPlayerButtonProps> = ({
           cursor: "pointer",
         }}
       >
-        {isAudioPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+        {gameStore.isAudioPlaying ? <Volume2 color="black" size={24} /> : <VolumeX color="black" size={24} />}
       </button>
     </div>
   );
-};
+});
 
 export default AudioPlayerButton;

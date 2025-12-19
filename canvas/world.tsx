@@ -1,24 +1,26 @@
-import { useState, useEffect, useRef, Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
+import Thunder from "@/components/3D/Thunder";
+import Tree from "@/components/3D/Trees";
+import KeyboardLegend from "@/components/keyboard-legend";
+import { gameStore } from "@/stores/GameStore";
 import {
+  Html,
+  KeyboardControls,
   PerspectiveCamera,
   Plane,
-  KeyboardControls,
-  Html,
   useProgress,
 } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { observer } from "mobx-react-lite";
+import type { NextPage } from "next";
+import { Suspense, useEffect, useState } from "react";
 import { Vector3 } from "three";
-import CameraControls from "./use-camera-controls";
+import AudioPlayer from "../components/audio-player";
+import PlayerBoard from "../components/player-board";
+import KeyboardControlHandler from "./keyboard-controls";
 import Labyrinth from "./labyrinth";
 import { labyrinthLayouts, LayoutType } from "./labyrinth-layouts";
-import AudioPlayer from "../components/audio-player";
-import KeyboardControlHandler from "./keyboard-controls";
-import AudioPlayerButton from "../components/audio-player-button";
-import PlayerBoard from "../components/player-board";
 import { ThreeDWorldProps } from "./types";
-import Tree from "@/components/3D/Trees";
-import Thunder, { thunderSounds } from "@/components/3D/Thunder";
-import KeyboardLegend from "@/components/keyboard-legend";
+import CameraControls from "./use-camera-controls";
 
 const initialLayout = labyrinthLayouts[0];
 
@@ -36,8 +38,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
     </Html>
   );
 };
-
-const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
+const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(({
   isDialogOpen,
   setIsDialogOpen,
   setResetTimer,
@@ -50,9 +51,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
   const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12));
   const [layoutIndex, setLayoutIndex] = useState(0);
   const [layout, setLayout] = useState<LayoutType>(initialLayout);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const thunderAudioRefs = useRef(thunderSounds.map(() => new Audio()));
+  const audioRef = gameStore.audioRef;
 
   useEffect(() => {
     if (isDialogOpen) {
@@ -76,7 +75,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
         setLayoutIndex((prevIndex) => prevIndex + 1);
       }
     }
-  }, [playerPosition]);
+  }, [layout.endPosition.x, layout.endPosition.y, layout.endPosition.z, layoutIndex, playerPosition, setDialogMessage, setIsDialogOpen]);
 
   useEffect(() => {
     setLayout(labyrinthLayouts[layoutIndex]);
@@ -88,25 +87,6 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
       setPlayerPosition(new Vector3(3, 1, 12));
     });
   }, [setResetLevel]);
-
-  const toggleAudio = () => {
-    if (audioRef.current) {
-      if (isAudioPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(() => console.log("Autoplay blocked."));
-      }
-    }
-
-    thunderAudioRefs.current.forEach((audio) => {
-      if (isAudioPlaying) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    });
-
-    setIsAudioPlaying(!isAudioPlaying);
-  };
 
   return (
     <div className="w-full h-screen relative">
@@ -164,8 +144,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
               />
             )}
             <Thunder
-              thunderAudioRefs={thunderAudioRefs}
-              isAudioPlaying={isAudioPlaying}
+              isAudioPlaying={gameStore.isAudioPlaying}
             />
             <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
             <CameraControls />
@@ -183,16 +162,12 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = ({
             startTimer={startTimer}
             isPaused={isPaused}
           />
-          <AudioPlayerButton
-            toggle={toggleAudio}
-            isAudioPlaying={isAudioPlaying}
-          />
-          <AudioPlayer audioRef={audioRef} />
+          {audioRef && <AudioPlayer audioRef={audioRef} />}
           <KeyboardLegend />
         </div>
       </KeyboardControls>
     </div>
   );
-};
+});
 
 export default ThreeDWorld;

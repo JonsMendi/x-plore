@@ -33,8 +33,3 @@ export interface GameDialogProps {
 export interface AudioPlayerProps {
   audioRef: React.RefObject<HTMLAudioElement>;
 }
-
-export interface AudioPlayerButtonProps {
-  toggle: any;
-  isAudioPlaying: any;
-}
