@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import { Vector2, Euler } from 'three'
 import { gameStore } from '@/stores/GameStore'
+import { dialogStore } from '@/stores/DialogStore'
 
 const CameraControls = () => {
   const { camera, gl } = useThree()
@@ -24,7 +25,7 @@ const CameraControls = () => {
       const wasLocked = isLocked.current
       isLocked.current = document.pointerLockElement !== null
 
-      if (wasLocked && !isLocked.current && gameStore.gameStarted) {
+      if (wasLocked && !isLocked.current && gameStore.gameStarted && !dialogStore.isDialogOpen) {
         gameStore.setPaused(true)
       }
     }

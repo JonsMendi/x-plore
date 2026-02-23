@@ -118,8 +118,8 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
               <Tree position={[-20, 0, 10]} scale={10} />
               <Tree position={[-20, 0, -10]} scale={13} />
 
-              <ambientLight intensity={0.1} />
-              <pointLight position={playerPosition.toArray()} intensity={7} distance={3} />
+              <ambientLight intensity={0.2} />
+              <pointLight position={playerPosition.toArray()} intensity={7} distance={7} />
               {layout.entrancePosition && (
                 <pointLight
                   position={[

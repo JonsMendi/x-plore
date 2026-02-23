@@ -84,8 +84,8 @@ const Screen: NextPage = observer(() => {
           resetLevel={gameStore.resetLevel}
         />
       )}
-
-      <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />
+      {!dialogStore.isDialogOpen && <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />}
+      
     </div>
   )
 })
