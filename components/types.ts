@@ -31,5 +31,5 @@ export interface GameDialogProps {
 }
 
 export interface AudioPlayerProps {
-  audioRef: React.RefObject<HTMLAudioElement>
+  audioRef: React.RefObject<HTMLAudioElement | null>
 }

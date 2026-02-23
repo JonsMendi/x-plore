@@ -10,7 +10,7 @@ class GameStore {
   resetLevel: (() => void) | null = null
   hover = false
   isPaused = false
-  audioRef: RefObject<HTMLAudioElement> | null = null
+  audioRef: RefObject<HTMLAudioElement | null> | null = null
   thunderAudioRefs: HTMLAudioElement[] = []
 
   isAudioPlaying = false

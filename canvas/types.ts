@@ -12,5 +12,5 @@ export interface ThreeDWorldProps {
 }
 
 export type KeyboardControlHandlerProps = {
-  setPlayerPosition: (position: Vector3) => void
+  playerPositionRef: React.MutableRefObject<Vector3>
 }

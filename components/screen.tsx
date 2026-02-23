@@ -1,14 +1,14 @@
+'use client'
+
 import StartCube from '@/canvas/start-cube'
 import ThreeDWorld from '@/canvas/world'
 import GameDialog from '@/components/game-dialog'
 import PauseDialog from '@/components/pause-dialog'
 import { observer } from 'mobx-react-lite'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import { dialogStore } from '../../stores/DialogStore'
-import { gameStore } from '../../stores/GameStore'
+import { dialogStore } from '@/stores/DialogStore'
+import { gameStore } from '@/stores/GameStore'
 
-const Screen: NextPage = observer(() => {
+const Screen = observer(() => {
   const requestPointerLock = () => {
     if (typeof document === 'undefined') return
     const lockTarget = document.body ?? document.documentElement
@@ -34,12 +34,6 @@ const Screen: NextPage = observer(() => {
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black relative">
-      <Head>
-        <title>X-Plore</title>
-        <meta name="description" content="A simple 3D world using Next.js and Three.js" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       {gameStore.gameStarted ? (
         <ThreeDWorld
           isDialogOpen={dialogStore.isDialogOpen}
@@ -84,8 +78,7 @@ const Screen: NextPage = observer(() => {
           resetLevel={gameStore.resetLevel}
         />
       )}
-
-      <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />
+      {!dialogStore.isDialogOpen && <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />}
     </div>
   )
 })
