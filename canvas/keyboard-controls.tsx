@@ -5,8 +5,7 @@ import { wallPositions } from './labyrinth'
 import { KeyboardControlHandlerProps } from './types'
 import { gameStore } from '@/stores/GameStore'
 
-const moveSpeed = 0.35
-const smoothingFactor = 0.1
+const moveSpeed = 5 // units per second
 
 // Collision detection helper
 const checkCollision = (position: Vector3): boolean => {
@@ -18,7 +17,7 @@ const checkCollision = (position: Vector3): boolean => {
   )
 }
 
-const KeyboardControlHandler = ({ setPlayerPosition }: KeyboardControlHandlerProps) => {
+const KeyboardControlHandler = ({ playerPositionRef }: KeyboardControlHandlerProps) => {
   const { camera } = useThree()
 
   // ✅ Correctly extract key states using Zustand's selector
@@ -27,28 +26,32 @@ const KeyboardControlHandler = ({ setPlayerPosition }: KeyboardControlHandlerPro
   const left = useKeyboardControls((state) => state.left)
   const right = useKeyboardControls((state) => state.right)
 
-  useFrame(() => {
+  useFrame((_state, delta) => {
     if (!gameStore.gameStarted) {
       return
     }
 
+    // Clamp delta to avoid huge jumps on tab-switch or lag spikes
+    const dt = Math.min(delta, 0.1)
+
     const direction = new Vector3()
     camera.getWorldDirection(direction)
     direction.y = 0
+    direction.normalize()
 
     const rightVector = new Vector3()
     rightVector.crossVectors(camera.up, direction).normalize()
 
     const newPosition = camera.position.clone()
 
-    if (forward) newPosition.addScaledVector(direction, moveSpeed)
-    if (backward) newPosition.addScaledVector(direction, -moveSpeed)
-    if (left) newPosition.addScaledVector(rightVector, moveSpeed)
-    if (right) newPosition.addScaledVector(rightVector, -moveSpeed)
+    if (forward) newPosition.addScaledVector(direction, moveSpeed * dt)
+    if (backward) newPosition.addScaledVector(direction, -moveSpeed * dt)
+    if (left) newPosition.addScaledVector(rightVector, moveSpeed * dt)
+    if (right) newPosition.addScaledVector(rightVector, -moveSpeed * dt)
 
     if (!checkCollision(newPosition)) {
-      camera.position.lerp(newPosition, smoothingFactor)
-      setPlayerPosition(camera.position.clone())
+      camera.position.copy(newPosition)
+      playerPositionRef.current.copy(camera.position)
     }
   })
 

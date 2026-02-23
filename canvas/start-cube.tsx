@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { Mesh } from 'three'
 
 const RotatingCube: React.FC = () => {
-  const meshRef = useRef<THREE.Mesh>(null)
+  const meshRef = useRef<Mesh>(null)
 
   useFrame(() => {
     if (meshRef.current) {

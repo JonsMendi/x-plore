@@ -3,11 +3,10 @@ import Tree from '@/components/3D/Trees'
 import KeyboardLegend from '@/components/keyboard-legend'
 import { gameStore } from '@/stores/GameStore'
 import { Html, KeyboardControls, PerspectiveCamera, Plane, useProgress } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { observer } from 'mobx-react-lite'
-import type { NextPage } from 'next'
-import { Suspense, useEffect, useState } from 'react'
-import { Vector3 } from 'three'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import { PointLight, Vector3 } from 'three'
 import AudioPlayer from '../components/audio-player'
 import PlayerBoard from '../components/player-board'
 import KeyboardControlHandler from './keyboard-controls'
@@ -32,7 +31,49 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
     </Html>
   )
 }
-const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
+// Component that makes a point light follow the camera each frame (no React state)
+const PlayerLight = () => {
+  const { camera } = useThree()
+  const lightRef = useRef<PointLight>(null)
+
+  useFrame(() => {
+    if (lightRef.current) {
+      lightRef.current.position.copy(camera.position)
+    }
+  })
+
+  return <pointLight ref={lightRef} intensity={7} distance={7} />
+}
+
+// Component that checks if the player reached the goal each frame (no React state)
+const GoalDetector = ({
+  endPosition,
+  onReachGoal,
+}: {
+  endPosition: { x: number; y: number; z: number }
+  onReachGoal: () => void
+}) => {
+  const { camera } = useThree()
+  const firedRef = useRef(false)
+
+  // Reset when the target changes
+  useEffect(() => {
+    firedRef.current = false
+  }, [endPosition.x, endPosition.y, endPosition.z])
+
+  useFrame(() => {
+    if (firedRef.current) return
+    const endGoal = new Vector3(endPosition.x, endPosition.y, endPosition.z)
+    if (camera.position.distanceTo(endGoal) < 1) {
+      firedRef.current = true
+      onReachGoal()
+    }
+  })
+
+  return null
+}
+
+const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
   ({
     isDialogOpen,
     setIsDialogOpen,
@@ -43,7 +84,7 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
     startTimer,
     isPaused,
   }) => {
-    const [playerPosition, setPlayerPosition] = useState(new Vector3(3, 1, 12))
+    const playerPositionRef = useRef(new Vector3(3, 1, 12))
     const [layoutIndex, setLayoutIndex] = useState(0)
     const [layout, setLayout] = useState<LayoutType>(initialLayout)
     const audioRef = gameStore.audioRef
@@ -54,27 +95,15 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
       }
     }, [isDialogOpen])
 
-    useEffect(() => {
-      const endGoal = new Vector3(layout.endPosition.x, layout.endPosition.y, layout.endPosition.z)
-      if (playerPosition.distanceTo(endGoal) < 1) {
-        if (layoutIndex === labyrinthLayouts.length - 1) {
-          // Last level completed -> Trigger different dialog
-          setIsDialogOpen(true)
-          setDialogMessage('You are still not good enough.')
-        } else {
-          setPlayerPosition(new Vector3(3, 1, 12))
-          setLayoutIndex((prevIndex) => prevIndex + 1)
-        }
+    const handleReachGoal = () => {
+      if (layoutIndex === labyrinthLayouts.length - 1) {
+        setIsDialogOpen(true)
+        setDialogMessage('You are still not good enough.')
+      } else {
+        playerPositionRef.current.set(3, 1, 12)
+        setLayoutIndex((prevIndex) => prevIndex + 1)
       }
-    }, [
-      layout.endPosition.x,
-      layout.endPosition.y,
-      layout.endPosition.z,
-      layoutIndex,
-      playerPosition,
-      setDialogMessage,
-      setIsDialogOpen,
-    ])
+    }
 
     useEffect(() => {
       setLayout(labyrinthLayouts[layoutIndex])
@@ -83,7 +112,7 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
     useEffect(() => {
       setResetLevel(() => {
         setLayoutIndex(0)
-        setPlayerPosition(new Vector3(3, 1, 12))
+        playerPositionRef.current.set(3, 1, 12)
       })
     }, [setResetLevel])
 
@@ -99,7 +128,7 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
         >
           <Canvas className="w-full h-full" style={{ background: 'black' }}>
             <Suspense fallback={<Loader onComplete={onSceneLoaded} />}>
-              <PerspectiveCamera makeDefault position={playerPosition.toArray()} />
+              <PerspectiveCamera makeDefault position={playerPositionRef.current.toArray()} />
               <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
                 <meshStandardMaterial attach="material" color="gray" />
               </Plane>
@@ -119,7 +148,7 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
               <Tree position={[-20, 0, -10]} scale={13} />
 
               <ambientLight intensity={0.2} />
-              <pointLight position={playerPosition.toArray()} intensity={7} distance={7} />
+              <PlayerLight />
               {layout.entrancePosition && (
                 <pointLight
                   position={[
@@ -132,7 +161,8 @@ const ThreeDWorld: NextPage<ThreeDWorldProps> = observer(
                 />
               )}
               <Thunder isAudioPlaying={gameStore.isAudioPlaying} />
-              <KeyboardControlHandler setPlayerPosition={setPlayerPosition} />
+              <KeyboardControlHandler playerPositionRef={playerPositionRef} />
+              <GoalDetector endPosition={layout.endPosition} onReachGoal={handleReachGoal} />
               <CameraControls />
             </Suspense>
           </Canvas>
