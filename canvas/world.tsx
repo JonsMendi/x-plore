@@ -201,7 +201,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
               setIsDialogOpen={setIsDialogOpen}
               setResetTimer={setResetTimer}
               startTimer={startTimer}
-              isPaused={isPaused}
+              isPaused={isPaused || isDialogOpen}
             />
             <KeyboardLegend />
           </div>
