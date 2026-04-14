@@ -1,12 +1,13 @@
-import { Box, MeshDistortMaterial, useTexture } from '@react-three/drei'
-import { useEffect } from 'react'
+import { Box, MeshDistortMaterial } from '@react-three/drei'
+import { useEffect, useMemo } from 'react'
 import { Vector3 } from 'three'
 import { LayoutType } from './labyrinth-layouts'
+import { createLevelTexture } from './level-textures'
 
 export const wallPositions: Vector3[] = []
 
-const Labyrinth: React.FC<LayoutType> = ({ layout, endPosition }) => {
-  const texture = useTexture('/lichen_rock_diff_4k.jpg')
+const Labyrinth: React.FC<LayoutType> = ({ layout, endPosition, textureTheme }) => {
+  const wallTexture = useMemo(() => createLevelTexture(textureTheme, 'wall'), [textureTheme])
 
   useEffect(() => {
     wallPositions.length = 0
@@ -19,7 +20,10 @@ const Labyrinth: React.FC<LayoutType> = ({ layout, endPosition }) => {
         }
       }),
     )
-  }, [layout])
+    return () => {
+      wallTexture.dispose()
+    }
+  }, [layout, wallTexture])
 
   return (
     <>
@@ -32,7 +36,7 @@ const Labyrinth: React.FC<LayoutType> = ({ layout, endPosition }) => {
                 args={[1, 4, 1]}
                 position={[colIndex - layout[0].length / 2, 2, rowIndex - layout.length / 2]}
               >
-                <meshStandardMaterial attach="material" map={texture} />
+                <meshStandardMaterial attach="material" map={wallTexture} />
               </Box>
             )
           }
