@@ -5,12 +5,13 @@ import { gameStore } from '@/stores/GameStore'
 import { Html, KeyboardControls, PerspectiveCamera, Plane, useProgress } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { observer } from 'mobx-react-lite'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { PointLight, Vector3 } from 'three'
 import AudioPlayer from '../components/audio-player'
 import PlayerBoard from '../components/player-board'
 import KeyboardControlHandler from './keyboard-controls'
 import Labyrinth from './labyrinth'
+import { createLevelTexture } from './level-textures'
 import { labyrinthLayouts, LayoutType } from './labyrinth-layouts'
 import { ThreeDWorldProps } from './types'
 import CameraControls from './use-camera-controls'
@@ -48,23 +49,28 @@ const PlayerLight = () => {
 // Component that checks if the player reached the goal each frame (no React state)
 const GoalDetector = ({
   endPosition,
+  levelIndex,
   onReachGoal,
 }: {
   endPosition: { x: number; y: number; z: number }
+  levelIndex: number
   onReachGoal: () => void
 }) => {
   const { camera } = useThree()
   const firedRef = useRef(false)
 
-  // Reset when the target changes
+  // Reset when level changes (some levels can share the same end position).
   useEffect(() => {
     firedRef.current = false
-  }, [endPosition.x, endPosition.y, endPosition.z])
+  }, [levelIndex])
 
   useFrame(() => {
     if (firedRef.current) return
-    const endGoal = new Vector3(endPosition.x, endPosition.y, endPosition.z)
-    if (camera.position.distanceTo(endGoal) < 1) {
+    const dx = camera.position.x - endPosition.x
+    const dz = camera.position.z - endPosition.z
+    const horizontalDistance = Math.hypot(dx, dz)
+
+    if (horizontalDistance < 1) {
       firedRef.current = true
       onReachGoal()
     }
@@ -85,15 +91,29 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
     isPaused,
   }) => {
     const playerPositionRef = useRef(new Vector3(3, 1, 12))
+    const sceneReadyRef = useRef(false)
     const [layoutIndex, setLayoutIndex] = useState(0)
     const [layout, setLayout] = useState<LayoutType>(initialLayout)
     const audioRef = gameStore.audioRef
+    const floorTexture = useMemo(() => createLevelTexture(layout.textureTheme, 'floor'), [layout.textureTheme])
+
+    useEffect(() => {
+      return () => {
+        floorTexture.dispose()
+      }
+    }, [floorTexture])
 
     useEffect(() => {
       if (isDialogOpen) {
         document.exitPointerLock()
       }
     }, [isDialogOpen])
+
+    useEffect(() => {
+      if (sceneReadyRef.current) return
+      sceneReadyRef.current = true
+      onSceneLoaded()
+    }, [onSceneLoaded])
 
     const handleReachGoal = () => {
       if (layoutIndex === labyrinthLayouts.length - 1) {
@@ -131,12 +151,13 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
             <Suspense fallback={<Loader onComplete={onSceneLoaded} />}>
               <PerspectiveCamera makeDefault position={playerPositionRef.current.toArray()} />
               <Plane args={[100, 100]} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-                <meshStandardMaterial attach="material" color="gray" />
+                <meshStandardMaterial attach="material" map={floorTexture} />
               </Plane>
               <Labyrinth
                 layout={layout.layout}
                 endPosition={layout.endPosition}
                 entrancePosition={layout.entrancePosition}
+                textureTheme={layout.textureTheme}
               />
               <Tree position={[-20, 0, -35]} scale={13} />
               <Tree position={[0, 0, -35]} scale={25} />
@@ -163,7 +184,11 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
               )}
               <Thunder isAudioPlaying={gameStore.isAudioPlaying} />
               <KeyboardControlHandler playerPositionRef={playerPositionRef} />
-              <GoalDetector endPosition={layout.endPosition} onReachGoal={handleReachGoal} />
+              <GoalDetector
+                endPosition={layout.endPosition}
+                levelIndex={layoutIndex}
+                onReachGoal={handleReachGoal}
+              />
               <CameraControls />
             </Suspense>
           </Canvas>

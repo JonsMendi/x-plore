@@ -38,6 +38,12 @@ const KeyboardControlHandler = ({ playerPositionRef }: KeyboardControlHandlerPro
       return
     }
 
+    // Support external reposition requests (level advance/reset).
+    if (camera.position.distanceToSquared(playerPositionRef.current) > 0.0001) {
+      camera.position.copy(playerPositionRef.current)
+      verticalVelocityRef.current = 0
+    }
+
     // Clamp delta to avoid huge jumps on tab-switch or lag spikes
     const dt = Math.min(delta, 0.1)
 

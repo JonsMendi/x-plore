@@ -1,7 +1,10 @@
+import { TextureTheme } from './level-textures'
+
 export type LayoutType = {
   layout: number[][]
   endPosition: { x: number; y: number; z: number }
   entrancePosition?: { x: number; y: number; z: number }
+  textureTheme: TextureTheme
 }
 
 export const labyrinthLayouts: LayoutType[] = [
@@ -24,6 +27,7 @@ export const labyrinthLayouts: LayoutType[] = [
     ],
     endPosition: { x: -2, y: 0.5, z: 0 },
     entrancePosition: { x: 3.5, y: 0.5, z: 6 },
+    textureTheme: 'stone',
   },
   {
     layout: [
@@ -43,6 +47,7 @@ export const labyrinthLayouts: LayoutType[] = [
     ],
     endPosition: { x: 0, y: 0.5, z: -1.5 },
     entrancePosition: { x: -5, y: 0.5, z: 6 },
+    textureTheme: 'moss',
   },
   {
     layout: [
@@ -62,6 +67,7 @@ export const labyrinthLayouts: LayoutType[] = [
     ],
     endPosition: { x: 0, y: 0.5, z: -1.5 },
     entrancePosition: { x: -1, y: 0.5, z: 6 },
+    textureTheme: 'sand',
   },
   {
     layout: [
@@ -81,6 +87,7 @@ export const labyrinthLayouts: LayoutType[] = [
     ],
     endPosition: { x: -1, y: 0.5, z: 2.5 },
     entrancePosition: { x: 4, y: 0.5, z: 6 },
+    textureTheme: 'ice',
   },
   {
     layout: [
@@ -100,5 +107,6 @@ export const labyrinthLayouts: LayoutType[] = [
     ],
     endPosition: { x: -1, y: 0.5, z: 0.5 },
     entrancePosition: { x: 1, y: 0.5, z: 6 },
+    textureTheme: 'ember',
   },
 ]
