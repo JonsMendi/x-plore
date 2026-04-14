@@ -7,7 +7,6 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { observer } from 'mobx-react-lite'
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { PointLight, Vector3 } from 'three'
-import AudioPlayer from '../components/audio-player'
 import PlayerBoard from '../components/player-board'
 import KeyboardControlHandler from './keyboard-controls'
 import Labyrinth from './labyrinth'
@@ -94,7 +93,6 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
     const sceneReadyRef = useRef(false)
     const [layoutIndex, setLayoutIndex] = useState(0)
     const [layout, setLayout] = useState<LayoutType>(initialLayout)
-    const audioRef = gameStore.audioRef
     const floorTexture = useMemo(() => createLevelTexture(layout.textureTheme, 'floor'), [layout.textureTheme])
 
     useEffect(() => {
@@ -183,7 +181,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
                   distance={3}
                 />
               )}
-              <Thunder isAudioPlaying={gameStore.isAudioPlaying} />
+              <Thunder isAudioPlaying={gameStore.isLightningPlaying} />
               <KeyboardControlHandler playerPositionRef={playerPositionRef} />
               <GoalDetector
                 endPosition={layout.endPosition}
@@ -205,7 +203,6 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
               startTimer={startTimer}
               isPaused={isPaused}
             />
-            {audioRef && <AudioPlayer audioRef={audioRef} />}
             <KeyboardLegend />
           </div>
         </KeyboardControls>

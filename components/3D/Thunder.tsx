@@ -16,6 +16,7 @@ const Thunder: React.FC<ThunderProps> = ({ isAudioPlaying }) => {
 
   useEffect(() => {
     const playRandomThunder = () => {
+      if (!gameStore.gameStarted) return
       if (!isAudioPlaying) return
       if (!gameStore.thunderAudioRefs.length) return
 
@@ -48,6 +49,12 @@ const Thunder: React.FC<ThunderProps> = ({ isAudioPlaying }) => {
 
     return () => clearInterval(interval)
   }, [isAudioPlaying, lastPlayedIndex])
+
+  useEffect(() => {
+    if (!gameStore.gameStarted) {
+      gameStore.stopAllThunder()
+    }
+  }, [gameStore.gameStarted])
 
   return (
     <directionalLight
