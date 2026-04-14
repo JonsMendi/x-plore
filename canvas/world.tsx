@@ -127,6 +127,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
 
     useEffect(() => {
       setLayout(labyrinthLayouts[layoutIndex])
+      gameStore.setCurrentLevel(layoutIndex + 1)
     }, [layoutIndex])
 
     useEffect(() => {
