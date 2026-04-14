@@ -15,6 +15,7 @@ class GameStore {
 
   isAudioPlaying = false
   remainingSeconds = 66
+  currentLevel = 1
 
   constructor() {
     makeAutoObservable(this)
@@ -85,6 +86,10 @@ class GameStore {
 
   setRemainingSeconds = (seconds: number) => {
     this.remainingSeconds = seconds
+  }
+
+  setCurrentLevel = (level: number) => {
+    this.currentLevel = level
   }
 }
 

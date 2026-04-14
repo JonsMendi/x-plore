@@ -36,7 +36,9 @@ const Screen = observer(() => {
     requestPointerLock()
   }
 
-  const finishedGame = dialogStore.dialogMessage === 'You are still not good enough.'
+  const leaderboardDialogMessages = new Set(['You are not good at this.', 'You are still not good enough.'])
+  const leaderboardFromDialog =
+    dialogStore.isDialogOpen && leaderboardDialogMessages.has(dialogStore.dialogMessage)
   const elapsedSeconds = Math.max(0, 66 - gameStore.remainingSeconds)
 
   return (
@@ -79,7 +81,7 @@ const Screen = observer(() => {
         </div>
       )}
 
-      {gameStore.sceneLoaded && !finishedGame && (
+      {gameStore.sceneLoaded && !leaderboardFromDialog && (
         <GameDialog
           isOpen={dialogStore.isDialogOpen}
           message={dialogStore.dialogMessage}
@@ -92,9 +94,9 @@ const Screen = observer(() => {
         />
       )}
       <LeaderboardModal
-        isOpen={showLeaderboard || (gameStore.sceneLoaded && dialogStore.isDialogOpen && finishedGame)}
+        isOpen={showLeaderboard || (gameStore.sceneLoaded && leaderboardFromDialog)}
         onClose={() => {
-          if (finishedGame) {
+          if (leaderboardFromDialog) {
             dialogStore.closeDialog()
             if (gameStore.resetTimer) gameStore.resetTimer()
             if (gameStore.resetLevel) gameStore.resetLevel()
@@ -102,8 +104,8 @@ const Screen = observer(() => {
           setShowLeaderboard(false)
         }}
         pendingScore={
-          finishedGame && dialogStore.isDialogOpen
-            ? { level: labyrinthLayouts.length, elapsedSeconds }
+          leaderboardFromDialog
+            ? { level: gameStore.currentLevel || labyrinthLayouts.length, elapsedSeconds }
             : null
         }
       />
