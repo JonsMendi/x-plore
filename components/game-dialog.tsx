@@ -23,7 +23,7 @@ const GameDialog: React.FC<GameDialogProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
       <div className="bg-white p-6 rounded-lg text-center shadow-lg max-w-sm">
         <div className="flex items-center justify-center">
-          <Image src={flameIcon} alt="Flame Icon" width={24} height={24} />
+          <Image src={flameIcon} alt="Flame Icon" width={24} height={24} style={{ height: 'auto' }} />
           <p className="text-xl font-bold text-black ml-2">{message}</p>
         </div>
         <button

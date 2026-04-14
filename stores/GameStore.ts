@@ -14,6 +14,7 @@ class GameStore {
   thunderAudioRefs: HTMLAudioElement[] = []
 
   isAudioPlaying = false
+  remainingSeconds = 66
 
   constructor() {
     makeAutoObservable(this)
@@ -80,6 +81,10 @@ class GameStore {
 
   setAudioPlaying = (isPlaying: boolean) => {
     this.isAudioPlaying = isPlaying
+  }
+
+  setRemainingSeconds = (seconds: number) => {
+    this.remainingSeconds = seconds
   }
 }
 

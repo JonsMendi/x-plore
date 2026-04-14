@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { TimerProps } from './types'
+import { gameStore } from '@/stores/GameStore'
 
 const Timer: React.FC<TimerProps> = ({
   setIsDialogOpen,
@@ -25,6 +26,10 @@ const Timer: React.FC<TimerProps> = ({
   useEffect(() => {
     setResetTimer(() => setSeconds(66))
   }, [setResetTimer])
+
+  useEffect(() => {
+    gameStore.setRemainingSeconds(seconds)
+  }, [seconds])
 
   return <div className="text-white text-lg">hurry-up: {seconds}s</div>
 }
