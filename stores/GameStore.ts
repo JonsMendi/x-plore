@@ -1,6 +1,6 @@
 import { thunderSounds } from '@/components/3D/Thunder'
 import { makeAutoObservable } from 'mobx'
-import type { RefObject } from 'react'
+import { createRef, type RefObject } from 'react'
 
 class GameStore {
   sceneLoaded = false
@@ -10,10 +10,11 @@ class GameStore {
   resetLevel: (() => void) | null = null
   hover = false
   isPaused = false
-  audioRef: RefObject<HTMLAudioElement | null> | null = null
+  audioRef: RefObject<HTMLAudioElement | null> = createRef<HTMLAudioElement>()
   thunderAudioRefs: HTMLAudioElement[] = []
 
-  isAudioPlaying = false
+  isMusicPlaying = true
+  isLightningPlaying = true
   remainingSeconds = 66
   currentLevel = 1
 
@@ -80,8 +81,12 @@ class GameStore {
     this.setStartTimer(true)
   }
 
-  setAudioPlaying = (isPlaying: boolean) => {
-    this.isAudioPlaying = isPlaying
+  setMusicPlaying = (isPlaying: boolean) => {
+    this.isMusicPlaying = isPlaying
+  }
+
+  setLightningPlaying = (isPlaying: boolean) => {
+    this.isLightningPlaying = isPlaying
   }
 
   setRemainingSeconds = (seconds: number) => {

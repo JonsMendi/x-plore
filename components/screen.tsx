@@ -2,6 +2,7 @@
 
 import StartCube from '@/canvas/start-cube'
 import ThreeDWorld from '@/canvas/world'
+import AudioPlayer from '@/components/audio-player'
 import GameDialog from '@/components/game-dialog'
 import LeaderboardModal from '@/components/leaderboard-modal'
 import PauseDialog from '@/components/pause-dialog'
@@ -13,6 +14,7 @@ import { labyrinthLayouts } from '@/canvas/labyrinth-layouts'
 
 const Screen = observer(() => {
   const [showLeaderboard, setShowLeaderboard] = useState(false)
+  const audioRef = gameStore.audioRef
   const requestPointerLock = () => {
     if (typeof document === 'undefined') return
     const lockTarget = document.body ?? document.documentElement
@@ -36,6 +38,19 @@ const Screen = observer(() => {
     requestPointerLock()
   }
 
+  const handleGoToMainMenu = () => {
+    gameStore.setPaused(false)
+    gameStore.setGameStarted(false)
+    gameStore.setStartTimer(false)
+    gameStore.setSceneLoaded(false)
+    gameStore.setRemainingSeconds(66)
+    gameStore.setCurrentLevel(1)
+    if (gameStore.resetTimer) gameStore.resetTimer()
+    if (gameStore.resetLevel) gameStore.resetLevel()
+    dialogStore.closeDialog()
+    setShowLeaderboard(false)
+  }
+
   const leaderboardDialogMessages = new Set(['You are not good at this.', 'You are still not good enough.'])
   const leaderboardFromDialog =
     dialogStore.isDialogOpen && leaderboardDialogMessages.has(dialogStore.dialogMessage)
@@ -43,6 +58,7 @@ const Screen = observer(() => {
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black relative">
+      <AudioPlayer audioRef={audioRef} />
       {gameStore.gameStarted ? (
         <ThreeDWorld
           isDialogOpen={dialogStore.isDialogOpen}
@@ -109,7 +125,9 @@ const Screen = observer(() => {
             : null
         }
       />
-      {!dialogStore.isDialogOpen && <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />}
+      {!dialogStore.isDialogOpen && (
+        <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} onMainMenu={handleGoToMainMenu} />
+      )}
     </div>
   )
 })
