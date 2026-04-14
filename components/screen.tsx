@@ -3,12 +3,16 @@
 import StartCube from '@/canvas/start-cube'
 import ThreeDWorld from '@/canvas/world'
 import GameDialog from '@/components/game-dialog'
+import LeaderboardModal from '@/components/leaderboard-modal'
 import PauseDialog from '@/components/pause-dialog'
 import { observer } from 'mobx-react-lite'
 import { dialogStore } from '@/stores/DialogStore'
 import { gameStore } from '@/stores/GameStore'
+import { useState } from 'react'
+import { labyrinthLayouts } from '@/canvas/labyrinth-layouts'
 
 const Screen = observer(() => {
+  const [showLeaderboard, setShowLeaderboard] = useState(false)
   const requestPointerLock = () => {
     if (typeof document === 'undefined') return
     const lockTarget = document.body ?? document.documentElement
@@ -31,6 +35,9 @@ const Screen = observer(() => {
     gameStore.setPaused(false)
     requestPointerLock()
   }
+
+  const finishedGame = dialogStore.dialogMessage === 'You are still not good enough.'
+  const elapsedSeconds = Math.max(0, 66 - gameStore.remainingSeconds)
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-black relative">
@@ -63,10 +70,16 @@ const Screen = observer(() => {
           >
             let me tell you how bad you are at this.
           </p>
+          <button
+            onClick={() => setShowLeaderboard(true)}
+            className="mt-5 rounded bg-gray-800 px-5 py-2 text-sm text-white hover:bg-gray-700"
+          >
+            View Leaderboard
+          </button>
         </div>
       )}
 
-      {gameStore.sceneLoaded && (
+      {gameStore.sceneLoaded && !finishedGame && (
         <GameDialog
           isOpen={dialogStore.isDialogOpen}
           message={dialogStore.dialogMessage}
@@ -78,6 +91,22 @@ const Screen = observer(() => {
           resetLevel={gameStore.resetLevel}
         />
       )}
+      <LeaderboardModal
+        isOpen={showLeaderboard || (gameStore.sceneLoaded && dialogStore.isDialogOpen && finishedGame)}
+        onClose={() => {
+          if (finishedGame) {
+            dialogStore.closeDialog()
+            if (gameStore.resetTimer) gameStore.resetTimer()
+            if (gameStore.resetLevel) gameStore.resetLevel()
+          }
+          setShowLeaderboard(false)
+        }}
+        pendingScore={
+          finishedGame && dialogStore.isDialogOpen
+            ? { level: labyrinthLayouts.length, elapsedSeconds }
+            : null
+        }
+      />
       {!dialogStore.isDialogOpen && <PauseDialog isOpen={gameStore.isPaused} onResume={handleResume} />}
     </div>
   )
