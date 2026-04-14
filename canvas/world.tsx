@@ -124,6 +124,7 @@ const ThreeDWorld: React.FC<ThreeDWorldProps> = observer(
             { name: 'backward', keys: ['ArrowDown', 's'] },
             { name: 'left', keys: ['ArrowLeft', 'a'] },
             { name: 'right', keys: ['ArrowRight', 'd'] },
+            { name: 'jump', keys: ['Space'] },
           ]}
         >
           <Canvas className="w-full h-full" style={{ background: 'black' }}>
